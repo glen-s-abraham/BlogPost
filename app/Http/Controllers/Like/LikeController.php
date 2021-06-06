@@ -14,34 +14,26 @@ class LikeController extends Controller
 
     public function getPostLike(Post $post)
     {
-       
     }
 
     public function getCommentLike(Comment $comment)
     {
-       
     }
 
     public function postLike(Post $post)
     {
-       
     }
 
     public function commentLike(Comment $comment)
     {
-       
     }
 
 
     public function postUnlike(Post $post)
     {
-       
     }
 
     public function commentUnlike(Comment $comment)
     {
-       
     }
-
-
 }

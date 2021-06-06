@@ -47,7 +47,19 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    /**
+     * Should follow a definite pattern.
+     *
+     * if you're using camelCase, snake_case or AnyThingElse, Make sure you are using it everywhere.
+     * Here in line 47, its lowerCase letters, here its Capitalized.
+     *
+     * My opinion, use camelCase
+     */
     public function Image(){
         return $this->morphOne(Image::class,name:'imagable');
     }
+
+    /**
+     * Tag implementation ?
+     */
 }

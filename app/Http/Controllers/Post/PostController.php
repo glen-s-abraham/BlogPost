@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Post;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\ApiController;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
+use App\Http\Requests\PostStoreRequest;
+use App\Http\Requests\PostUpdateRequest;
 
-class PostController extends Controller
+class PostController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +18,29 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts=Post::all();
+        return $this->showCollectionAsResponse($posts);
+
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Returns the tag id's of tags passed in
+     * Array of tags passed in
+     * Returns the ids of those tags
      */
-    public function create()
+    private function creatOrFetchTagIds($taglist)
     {
-        //
+        $tags=[];
+        foreach(explode(',' , $taglist) as $tagname)
+        {    
+            $tag=Tag::firstOrCreate(['name'=>$tagname]);
+         
+            if($tag)
+            {
+                $tags[]=$tag->id;
+            }                           
+        }
+        return $tags;
     }
 
     /**
@@ -34,9 +49,25 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PostStoreRequest $request)
     {
-        //
+        $data=$request->only(['title','body']);
+        $data['user_id']=1; //to be replace with id of current logged in user
+        $post=Post::create($data);
+        
+        if($request->has('tags'))
+        {
+            $tags=$this->creatOrFetchTagIds($request->tags);
+            $post->tags()->attach($tags);
+        }
+
+        if($request->hasFile('image'))
+        {
+            $image=$request->file('image')->store('public/posts');
+            $post->image()->create(['url'=>$image]);
+        }
+
+        return $this->showModelAsResponse($post,201);    
     }
 
     /**
@@ -47,18 +78,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Post $post)
-    {
-        //
+        return $this->showModelAsResponse($post);
     }
 
     /**
@@ -68,9 +88,23 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(PostUpdateRequest $request, Post $post)
     {
-        //
+        $post->update($request->only(['title','body']));
+
+        if($request->has('tags'))
+        {
+            $tags=$this->creatOrFetchTagIds($request->tags);
+            $post->tags()->sync($tags);
+        }
+
+        if($request->hasFile('image'))
+        {
+            $image=$request->file('image')->store('public/posts');
+            $post->image()->updateOrCreate(['url'=>$image]);
+        }
+
+        return $this->showModelAsResponse($post);
     }
 
     /**
@@ -81,6 +115,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        
+        return $this->showModelAsResponse($post);
     }
 }

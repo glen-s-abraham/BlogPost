@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
+use Illuminate\Support\Facades\Hash;
 
 
 class UserController extends ApiController
@@ -14,18 +15,16 @@ class UserController extends ApiController
     
     public function store(UserStoreRequest $request)
     {
-        $data=$request->all();
-        $data['password']=bcrypt($request->password);
+        $data=$request->only(['name','email','password']);
+        $data['password']=Hash::make($request->password);
         $user=User::create($data);
         if($request->hasFile('image'))
         {
             $image=$request->file('image')->store('public/profiles');
             $user->image()->create(['url'=>$image]);
         }
-      
         
-
-        return $this->showOne($user,201);
+        return $this->showModelAsResponse($user,201);
     }
 
     /**
@@ -38,7 +37,7 @@ class UserController extends ApiController
     {
         //To be replaced with currently authenticated user
         
-        return $this->showOne($user);
+        return $this->showModelAsResponse($user);
     }
 
     /**
@@ -49,39 +48,14 @@ class UserController extends ApiController
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        //Should Replace user instance with logged in user
-
-        if($request->has('name')){
-            $user->name=$request->name;
-        }
-
-        if($request->has('email') && $user->email != $request->email){
-            $user->email=$request->email;
-
-        }
-
-        if($request->has('password')){
-            $password=bcrypt($request->password);
-            $user->password=$password;   
-            
-        }
-
+        $user->update($request->only(['name','email','password']));
         //doubtful regarding the update of files
         if($request->hasFile('image'))
         {
             $image=$request->file('image')->store('public/profiles');
             $user->image()->updateOrCreate(['url'=>$image]);
         }
-
-        if(!$user->isDirty())
-        {
-
-            return $this->errorResponse("You need to specify a different value to update",422);
-        }
-
-        $user->save();
-
-        return $this->showOne($user);
+        return $this->showModelAsResponse($user);
     }
 
     /**
@@ -96,6 +70,6 @@ class UserController extends ApiController
         //Should Replace user instance with logged in user
 
         $user->delete();
-        return $this->showOne($user);
+        return $this->showModelAsResponse($user);
     }
 }

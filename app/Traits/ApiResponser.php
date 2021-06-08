@@ -17,13 +17,13 @@ trait ApiResponser{
 	}
 
 	//return a list of elements of a model
-	protected function showAll(Collection $collection,$code=200)
+	protected function showCollectionAsResponse(Collection $collection,$code=200)
 	{
 		return $this->successResponse(["data"=>$collection],$code);
 	}
 
 	//return a single element of a model
-	protected function showOne(Model $model,$code=200)
+	protected function showModelAsResponse(Model $model,$code=200)
 	{
 		return $this->successResponse(["data"=>$model],$code);
 	}

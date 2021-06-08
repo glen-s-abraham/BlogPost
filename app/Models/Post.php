@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Image;
 use App\Models\Comment;
 use App\Models\Like;
+use App\Models\Tag;
 
 class Post extends Model
 {
@@ -31,6 +32,10 @@ class Post extends Model
     public function likes()
     {
         return $this->morphMany(Like::class,name:'likable');
+    }
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
     }
 
 

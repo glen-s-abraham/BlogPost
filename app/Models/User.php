@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Post;
 use App\Models\Image;
+use App\Models\Comment;
+use App\Models\Like;
 
 class User extends Authenticatable
 {
@@ -45,6 +47,14 @@ class User extends Authenticatable
 
     public function posts(){
         return $this->hasMany(Post::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function Likes(){
+        return $this->hasMany(Like::class);
     }
 
     public function image(){

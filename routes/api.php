@@ -18,9 +18,17 @@ use Illuminate\Support\Facades\Route;
 Route::resource('user','User\UserController')
 ->only(['store','show','update','destroy']);
 
+Route::resource('user.posts','User\UserPostsController')->only(['index']);
+
+Route::resource('user.comments','User\UserCommentsController')->only(['index']);
+
+Route::resource('user.likes','User\UserLikesController')->only(['index']);
+
 //Posts
 Route::resource('posts','Post\PostController')
 ->only(['index','store','show','update','destroy']);
+
+Route::get('/post/all','Post\PostsCommentsAndLikesController@index')->name('posts.all');
 
 /**
  * Need More routes like - /users/{userId}/posts => specific user's posts

@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
 
         });
 
-        $this->renderable(function (Throwable $e) {
+        /*$this->renderable(function (Throwable $e) {
 
             if ($e instanceof ValidationException) {
                 return $this->errorResponse($e->errors(),$e->status);
@@ -106,6 +106,6 @@ class Handler extends ExceptionHandler
             
                 //return $this->errorResponse('Try later', Response::HTTP_INTERNAL_SERVER_ERROR);
             }
-        });
+        });*/
     }
 }

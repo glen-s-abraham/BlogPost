@@ -10,8 +10,7 @@ class PostsCommentsAndLikesController extends ApiController
 {
     public function index()
     {
-        $posts=Post::all()->load(['user','comments','likes']);
-        return $this->showCollectionAsResponse($posts);
+        
 
     }
 }

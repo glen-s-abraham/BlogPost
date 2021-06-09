@@ -30,6 +30,14 @@ Route::resource('posts','Post\PostController')
 
 Route::get('/post/all','Post\PostsCommentsAndLikesController@index')->name('posts.all');
 
+Route::resource('post.comments','Post\PostCommentsController')
+->only(['index','store']);
+
+Route::get('post/{postId}/likes','Post\PostLikesController@index');
+
+Route::put('post/{postId}/likes','Post\PostLikesController@toggleLike');
+
+
 /**
  * Need More routes like - /users/{userId}/posts => specific user's posts
  * There should be APIs for listing all posts with its comments, number of likes, author details. [with eager loading]
@@ -37,29 +45,21 @@ Route::get('/post/all','Post\PostsCommentsAndLikesController@index')->name('post
 
 //Comments
 
-Route::get('/posts/{postId}/comments','Comment\CommentController@getPostComments')->name('post.comments');
+Route::resource('comment.replies','Comment\CommentRepliesController')
+->only(['index','store']);
 
-Route::get('/comments/{commentId}/replies','Comment\CommentController@getCommentReplies')->name('comments.replies');
-
-Route::post('/posts/{postId}/comments','Comment\CommentController@postComment')->name('post.comment.store');
-
-Route::post('/comments/{commentId}/replies','Comment\CommentController@postReply')->name('reply.comment.store');
-
-Route::put('/comments/{commentId}','Comment\CommentController@update')->name('comment.edit');
+Route::put('/comments/{commentId}/update','Comment\CommentController@update')->name('comment.edit');
 
 Route::delete('/comments/{commentId}/delete','Comment\CommentController@destroy')->name('comment.delete');
 
-//Likes
+Route::get('/comment/{commentId}/likes','Comment\CommentLikesController@index')->name('posts.like');
 
-//test purposes
-Route::get('/posts/{postId}/likes','Like\LikeController@getPostLikes')->name('posts.like');
+Route::put('/comment/{commentId}/likes','Comment\CommentLikesController@toggleLike')->name('comments.like');
 
-Route::get('/comments/{commentId}/likes','Like\LikeController@getCommentLikes')->name('posts.like');
 
-// toggle => If user haven't liked yet, like it OR ELSE, unlike it
 
-Route::put('/posts/{postId}/likes','Like\LikeController@togglePostlikes')->name('posts.like');
 
-Route::put('/comments/{commentId}/likes','Like\LikeController@toggleCommentLikes')->name('comments.like');
+
+
 
 

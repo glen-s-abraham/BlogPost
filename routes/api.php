@@ -41,10 +41,17 @@ Route::put('/comments/{commentId}','Comment\CommentController@update')->name('co
 
 Route::delete('/comments/{commentId}/delete','Comment\CommentController@destroy')->name('comment.delete');
 
+//Likes
+
+//test purposes
+Route::get('/posts/{postId}/likes','Like\LikeController@getPostLikes')->name('posts.like');
+
+Route::get('/comments/{commentId}/likes','Like\LikeController@getCommentLikes')->name('posts.like');
 
 // toggle => If user haven't liked yet, like it OR ELSE, unlike it
-Route::patch('/posts/{postId}/likes','Like\LikeController@postLike')->name('posts.like');
 
-Route::patch('/comments/{commentId}/likes','Like\LikeController@commentLike')->name('comments.like');
+Route::put('/posts/{postId}/likes','Like\LikeController@togglePostlikes')->name('posts.like');
+
+Route::put('/comments/{commentId}/likes','Like\LikeController@toggleCommentLikes')->name('comments.like');
 
 

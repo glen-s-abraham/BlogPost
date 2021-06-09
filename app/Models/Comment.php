@@ -25,6 +25,6 @@ class Comment extends Model
 
     public function likes()
     {
-        return $this->morphOne(Like::class,name:'commentable');
+        return $this->morphOne(Like::class,name:'likable');
     }
 }

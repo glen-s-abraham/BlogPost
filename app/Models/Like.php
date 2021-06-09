@@ -11,6 +11,8 @@ class Like extends Model
 
     protected $guarded=[];
 
+    public $timestamps = false;
+
     public function likable()
     {
         return $this->morphTo();

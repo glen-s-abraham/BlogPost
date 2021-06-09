@@ -24,6 +24,7 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         return [
+            'name'=>'unique:users'
             'email'=>'email|unique:users,email',
             'password'=>'min:6|confirmed',
             'image' => 'mimes:jpeg,bmp,png'

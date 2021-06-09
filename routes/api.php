@@ -29,17 +29,17 @@ Route::resource('posts','Post\PostController')
 
 //Comments
 
-Route::get('/posts/{postId}/comments','Comment\CommentController@getPostComment')->name('post.comments');
+Route::get('/posts/{postId}/comments','Comment\CommentController@getPostComments')->name('post.comments');
 
 Route::get('/comments/{commentId}/replies','Comment\CommentController@getCommentReplies')->name('comments.replies');
 
 Route::post('/posts/{postId}/comments','Comment\CommentController@postComment')->name('post.comment.store');
 
-Route::post('/comments/{commentId}/replies','Comment\CommentController@replyComment')->name('reply.comment.store');
+Route::post('/comments/{commentId}/replies','Comment\CommentController@postReply')->name('reply.comment.store');
 
 Route::put('/comments/{commentId}','Comment\CommentController@update')->name('comment.edit');
 
-Route::delete('/destroy-comment/{id}','Comment\CommentController@destroy')->name('comment.delete');
+Route::delete('/comments/{commentId}/delete','Comment\CommentController@destroy')->name('comment.delete');
 
 
 // toggle => If user haven't liked yet, like it OR ELSE, unlike it

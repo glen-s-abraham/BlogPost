@@ -20,11 +20,11 @@ class Comment extends Model
 
     public function replies()
     {
-        $this->morphMany(Comment::class,name:'commentable');
+        return $this->morphMany(Comment::class,name:'commentable');
     }
 
     public function likes()
     {
-        $this->morphOne(Like::class,name:'commentable');
+        return $this->morphOne(Like::class,name:'commentable');
     }
 }

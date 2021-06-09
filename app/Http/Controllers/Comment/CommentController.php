@@ -28,7 +28,7 @@ class CommentController extends ApiController
        if($post && $request->has('body'))
        {
             //user id needs to be replaced
-            $comment=$post->comments()->create(['body'=>$request->body,'user_id'=>1]);
+            $comment=$post->comments()->create(['body'=>$request->body,'user_id'=>2]);
             return $this->showModelAsResponse($comment);
        }
        return $this->errorResponse("Post not found",404);
@@ -50,21 +50,42 @@ class CommentController extends ApiController
 
     public function update(Request $request,$commentId)
     {
-       $comment=Comment::findOrFail($commentId);
-       if($comment && $request->has('body'))
-       {
-            $comment->update($request->only(['body']));
-            return $this->showModelAsResponse($comment);
+       $user_id=2;//test case,need to change according to loggin in user 
+
+       $owncomment=Comment::where('user_id',$user_id)
+       ->where('id',$commentId)
+       ->count();
+
+       if($owncomment)
+       {  
+          $comment=Comment::findOrFail($commentId);
+          if($comment && $request->has('body'))
+          {
+               $comment->update($request->only(['body']));
+               return $this->showModelAsResponse($comment);
+          }
+          return $this->errorResponse("Comment doesn't exist",404);
        }
-       return $this->errorResponse("Comment does'nt exist",404);
+       return $this->errorResponse("Object not found",404);
        
     }
 
     public function destroy($commentId)
     {
-       $comment=Comment::findOrFail($commentId);
-       $comment->delete();
-       return $this->showModelAsResponse($comment);
+       $user_id=3;//test case,need to change according to loggin in user 
+
+       $owncomment=Comment::where('user_id',$user_id)
+       ->where('id',$commentId)
+       ->count();
+
+       if($owncomment)
+       {
+         $comment=Comment::findOrFail($commentId);
+         $comment->delete();
+         return $this->showModelAsResponse($comment);
+       }
+       return $this->errorResponse("Object not found",404);
+       
     }
 
 }

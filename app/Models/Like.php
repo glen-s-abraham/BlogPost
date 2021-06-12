@@ -20,6 +20,6 @@ class Like extends Model
     }
     public function user()
     {
-        return $this->belongsToOne(User::class);
+        return $this->belongsTo(User::class);
     }
 }

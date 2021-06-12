@@ -15,11 +15,11 @@ class PostLikesController extends ApiController
 
    
    
-    public function toggleLike($postId)
+    public function toggleLike(Post $post)
     {
-       $post=Post::findOrFail($postId);
+       
     
-       $user_id=9;//test case,needs to be replaced with authenticated user
+       $user_id=auth()->user()->id;
 
        $liked=$post->likes()->where('user_id',$user_id)->get()->count();;
         

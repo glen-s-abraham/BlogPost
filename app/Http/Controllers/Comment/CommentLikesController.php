@@ -8,19 +8,18 @@ use App\Models\Comment;
 
 class CommentLikesController extends ApiController
 {
-    public function index($commentId)
+    public function index(Comment $comment)
     {
-        $likes=Comment::findOrFail($commentId)->likes()->count();
-       return $this->successResponse(["likes"=>$likes],200);
+        $likes=$comment->likes()->count();
+        return $this->successResponse(["likes"=>$likes],200);
     }
 
    
    
-    public function toggleLike($commentId)
+    public function toggleLike(Comment $comment)
     {
-        $user_id=9;//test case,needs to be replaced with authenticated user
+        $user_id=auth()->user()->id;
 
-        $comment=Comment::findOrFail($commentId);
         $liked=$comment->likes()->where('user_id',$user_id)->get()->count();
         if($liked==0)
         {
@@ -29,6 +28,6 @@ class CommentLikesController extends ApiController
         }
         $comment->likes()->where('user_id',$user_id)->delete();
         return $this->successResponse(["message"=>"Comment Unliked"],200);
-        return($liked);
+        
     }
 }

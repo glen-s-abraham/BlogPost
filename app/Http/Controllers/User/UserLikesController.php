@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class UserLikesController extends ApiController
 {
-    public function index(User $user)
+    public function index()
     {
-        
+        $user=auth()->user();
         $likes=$user->likes()->with('likable')->get();;
         return $this->showCollectionAsResponse($likes);
     }

@@ -24,8 +24,8 @@ class CommentRepliesController extends ApiController
     {
         if($request->has('body'))
         {
-            //user id needs to be replaced
-            $comment=$comment->replies()->create(['body'=>$request->body,'user_id'=>2]);
+            $user_id=auth()->user()->id;
+            $comment=$comment->replies()->create(['body'=>$request->body,'user_id'=>$user_id]);
             return $this->showModelAsResponse($comment);
         }
         return $this->errorResponse("Comment not found",404);

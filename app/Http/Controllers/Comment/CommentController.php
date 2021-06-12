@@ -13,43 +13,37 @@ class CommentController extends ApiController
    
 
     
-    public function update(Request $request,$commentId)
+    public function update(Request $request,Comment $comment)
     {
-       $user_id=2;//test case,need to change according to loggin in user 
+       $user_id=auth()->user()->id;
 
-       $owncomment=Comment::where('user_id',$user_id)
-       ->where('id',$commentId)
-       ->count();
-
-       if($owncomment)
+       if($comment->user_id!=$user_id)
        {  
-          $comment=Comment::findOrFail($commentId);
-          if($comment && $request->has('body'))
-          {
-               $comment->update($request->only(['body']));
-               return $this->showModelAsResponse($comment);
-          }
-          return $this->errorResponse("No updates given",404);
+          return $this->errorResponse("You don't have permission to update this post",409);
        }
-       return $this->errorResponse("Object not found",404);
+
+       if($request->has('body'))
+       {
+         $comment->update($request->only(['body']));
+       }
        
+       return $this->showModelAsResponse($comment);
+          
     }
 
-    public function destroy($commentId)
+    public function destroy(Comment $comment)
     {
-       $user_id=2;//test case,need to change according to loggin in user 
+       $user_id=auth()->user()->id; 
 
-       $owncomment=Comment::where('user_id',$user_id)
-       ->where('id',$commentId)
-       ->count();
-
-       if($owncomment)
-       {
-         $comment=Comment::findOrFail($commentId);
-         $comment->delete();
-         return $this->showModelAsResponse($comment);
+       if($comment->user_id!=$user_id)
+       {  
+          return $this->errorResponse("You don't have permission to update this post",409);
        }
-       return $this->errorResponse("Object not found",404);
+
+       $comment->delete();
+       
+       return $this->showModelAsResponse($comment);
+  
        
     }
 

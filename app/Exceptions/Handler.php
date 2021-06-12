@@ -56,56 +56,56 @@ class Handler extends ExceptionHandler
 
         });
 
-        /*$this->renderable(function (Throwable $e) {
+    // $this->renderable(function (Throwable $e) {
 
-            if ($e instanceof ValidationException) {
-                return $this->errorResponse($e->errors(),$e->status);
-            }
+    //         if ($e instanceof ValidationException) {
+    //             return $this->errorResponse($e->errors(),$e->status);
+    //         }
 
-            else if ($e instanceof ModelNotFoundException)
-            {
-                return $this->errorResponse("Model not found",404);
-            }
+    //         else if ($e instanceof ModelNotFoundException)
+    //         {
+    //             return $this->errorResponse("Model not found",404);
+    //         }
 
-            else if ($e instanceof AuthenticationException)
-            {
-                return $this->errorResponse("Unauthenticated",401);
-            }
+    //         else if ($e instanceof AuthenticationException)
+    //         {
+    //             return $this->errorResponse("Unauthenticated",401);
+    //         }
 
-            else if ($e instanceof AuthorizationException)
-            {
-                return $this->errorResponse("Unauthorized for the action",403);
-            }
+    //         else if ($e instanceof AuthorizationException)
+    //         {
+    //             return $this->errorResponse("Unauthorized for the action",403);
+    //         }
 
-            else if ($e instanceof NotFoundHttpException)
-            {
-                return $this->errorResponse("Resource not Found",404);
-            }
+    //         else if ($e instanceof NotFoundHttpException)
+    //         {
+    //             return $this->errorResponse("Resource not Found",404);
+    //         }
 
-            else if ($e instanceof MethodNotAllowedHttpException)
-            {
-                return $this->errorResponse("Current method not allowed",405);
-            }
+    //         else if ($e instanceof MethodNotAllowedHttpException)
+    //         {
+    //             return $this->errorResponse("Current method not allowed",405);
+    //         }
 
-            else if ($e instanceof HttpException)
-            {
-                return $this->errorResponse($e->getMessage(),$e->getStatusCode());
-            }
+    //         else if ($e instanceof HttpException)
+    //         {
+    //             return $this->errorResponse($e->getMessage(),$e->getStatusCode());
+    //         }
 
-            else if ($e instanceof QueryException)
-            {   
-                if($e->errorInfo[1]==1451)
-                {
-                    return $this->errorResponse("Current instance is in relation with other resources thus cannot be removed",409);    
-                }
+    //         else if ($e instanceof QueryException)
+    //         {   
+    //             if($e->errorInfo[1]==1451)
+    //             {
+    //                 return $this->errorResponse("Current instance is in relation with other resources thus cannot be removed",409);    
+    //             }
                 
-            }
-            else 
-            {
-                return $this->errorResponse($e->getMessage(),$e->getCode());
+    //         }
+    //         else 
+    //         {
+    //             return $this->errorResponse($e->getMessage(),$e->getCode());
             
-                //return $this->errorResponse('Try later', Response::HTTP_INTERNAL_SERVER_ERROR);
-            }
-        });*/
+    //             //return $this->errorResponse('Try later', Response::HTTP_INTERNAL_SERVER_ERROR);
+    //         }
+    //     });
     }
 }

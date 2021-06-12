@@ -7,9 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Post;
 class PostLikesController extends ApiController
 {
-    public function index($postId)
+    public function index(Post $post)
     {
-        $post=Post::findOrFail($postId);
         $likes=$post->likes->count();
         return $this->successResponse(["likes"=>$likes],200);
     }

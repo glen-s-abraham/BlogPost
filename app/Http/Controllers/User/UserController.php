@@ -79,7 +79,7 @@ class UserController extends ApiController
         return $this->showModelAsResponse($user);
     }
 
-    
+    //Logout
     public function logout(Request $request)
     {
         auth()->user()->tokens()->delete();

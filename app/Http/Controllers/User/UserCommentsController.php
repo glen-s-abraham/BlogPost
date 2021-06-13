@@ -3,21 +3,22 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
-use App\Models\User;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 class UserCommentsController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $userRepositoryInterface;
+    
+    public function __construct(UserRepositoryInterface $userRepositoryInterface)
+    {
+        $this->userRepositoryInterface=$userRepositoryInterface;
+    }
+
     public function index()
     {
-        $user=auth()->user();
-        $comments=$user->comments()->with('commentable')->get();
-        return $this->showCollectionAsResponse($comments);
+        $comments=$this->userRepositoryInterface->getUserComments(auth()->user()->id);
+        return $this->successResponse(['comments'=>$comments],200);
     }
 
     

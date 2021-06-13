@@ -19,7 +19,7 @@ class CommentController extends ApiController
 
        if($comment->user_id!=$user_id)
        {  
-          return $this->errorResponse("You don't have permission to update this post",409);
+          return $this->errorResponse("You don't have permission to update this Comment",409);
        }
 
        if($request->has('body'))

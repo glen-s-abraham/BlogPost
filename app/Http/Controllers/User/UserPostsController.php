@@ -3,15 +3,21 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiController;
-use App\Models\User;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
 
 class UserPostsController extends ApiController
 {
-   
-    public function index(User $user)
+    private $userRepositoryInterface;
+    
+    public function __construct(UserRepositoryInterface $userRepositoryInterface)
     {
-        $posts=$user->posts;
+        $this->userRepositoryInterface=$userRepositoryInterface;
+    }
+   
+    public function index($userId)
+    {
+        $posts=$this->userRepositoryInterface->getUserPosts($userId);
         return $this->showCollectionAsResponse($posts);
     }
 

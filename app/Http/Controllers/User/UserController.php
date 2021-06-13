@@ -8,24 +8,34 @@ use App\Http\Controllers\ApiController;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 
 
 class UserController extends ApiController
 {
+
+    private $userRepositoryInterface;
+    public function __construct(UserRepositoryInterface $userRepositoryInterface)
+    {
+        $this->userRepositoryInterface=$userRepositoryInterface;
+    }
+
+
     //Registration
     public function store(UserStoreRequest $request)
     {
         $data=$request->only(['name','email','password']);
         $data['password']=Hash::make($request->password);
-        $user=User::create($data);
         if($request->hasFile('image'))
         {
             $image=$request->file('image')->store('public/profiles');
-            $user->image()->create(['url'=>$image]);
+            $data['image']=$image;
         }
+
+        $user=$this->userRepositoryInterface->addNewUser($data);
         
-        return $this->showModelAsResponse($user,201);
+        return $this->successResponse(['user'=>$user],201);
+          
     }
 
     //Login Controller
@@ -35,10 +45,8 @@ class UserController extends ApiController
         if (!Auth::attempt($request->only('email', 'password'))) {
             return $this->errorResponse('Invalid login details',401); 
         }
-
-        $user = User::where('email', $request['email'])->firstOrFail();
-
-        $token = $user->createToken('auth_token')->plainTextToken;
+              
+        $token=$this->userRepositoryInterface->createUserToken($request->email);
 
         return $this->successResponse([
             'access_token' => $token,
@@ -50,39 +58,40 @@ class UserController extends ApiController
     //Profile
     public function show()
     {
-        $user=auth()->user();
-        return $this->showModelAsResponse($user);
+        $user=auth()->user()->formatProfile();
+        return $this->successResponse(['user'=>$user],200);
+        
     }
 
     //Update profile   
     public function update(UserUpdateRequest $request)
     {
-        $user=auth()->user();
-        $user->update($request->only(['name','email','password']));
-        //doubtful regarding the update of files
+        $data=$request->only(['name','email','password']);
+
         if($request->hasFile('image'))
         {
             $image=$request->file('image')->store('public/profiles');
-            $user->image()->updateOrCreate(['url'=>$image]);
+            $data['image']=$image;
         }
-      
-        return $this->showModelAsResponse($user);
+        
+        $user=$this->userRepositoryInterface->updateExistingUser(auth()->user()->id,$data);
+
+        return $this->successResponse(['user'=>$user],200);
     }
 
     //delete profile
     public function destroy()
     {
-
-        //Should Replace user instance with logged in user
-        $user=auth()->user();
-        $user->delete();
-        return $this->showModelAsResponse($user);
+             
+        $user=$this->userRepositoryInterface->deleteExistingUser(auth()->user()->id);
+        return $this->successResponse(['message'=>'Removed account'],200);
     }
 
     //Logout
     public function logout(Request $request)
     {
-        auth()->user()->tokens()->delete();
-        return response()->json(['message' => 'User successfully signed out']);
+        
+        $this->userRepositoryInterface->deleteUserToken(auth()->user()->id);
+        return $this->successResponse(['message' => 'User successfully signed out'],200);
     }
 }

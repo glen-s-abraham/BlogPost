@@ -61,4 +61,18 @@ class User extends Authenticatable
     public function image(){
         return $this->morphOne(Image::class,name:'imagable');
     }
+
+    public function formatProfile()
+    {
+        return [
+            'user_id'=>$this->id,
+            'user_name'=>$this->name,
+            'user_email'=>$this->email,
+            'created_at'=>$this->created_at->diffForHumans(),
+            'updated_at'=>$this->updated_at->diffForHumans(),
+            'profile_image'=>$this->image->url,
+        ];
+    }
+
+    
 }

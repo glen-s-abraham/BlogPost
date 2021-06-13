@@ -30,8 +30,8 @@ Route::get('post/{postId}/likes','Post\PostLikesController@index');
 
 
 //Comment related
-Route::get('comment/{comment}/replies','Comment\CommentRepliesController@index');
-Route::get('comment/{comment}/likes','Comment\CommentLikesController@index');
+Route::get('comment/{commentId}/replies','Comment\CommentRepliesController@index');
+Route::get('comment/{commentId}/likes','Comment\CommentLikesController@index');
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     //User Related endpoints
@@ -51,10 +51,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('post/{postId}/like','Post\PostLikesController@toggleLike');
 
     //Comment Related Endpoints
-    Route::post('comment/{comment}/reply','Comment\CommentRepliesController@store');
-    Route::put('comment/{comment}/update','Comment\CommentController@update');
-    Route::delete('comment/{comment}/delete','Comment\CommentController@update');
-    Route::put('comment/{comment}/like','Comment\CommentLikesController@toggleLike');
+    Route::post('comment/{commentId}/reply','Comment\CommentRepliesController@store');
+    Route::put('comment/{commentId}/update','Comment\CommentController@update');
+    Route::delete('comment/{commentId}/delete','Comment\CommentController@destroy');
+    Route::put('comment/{commentId}/like','Comment\CommentLikesController@toggleLike');
 
 });
 

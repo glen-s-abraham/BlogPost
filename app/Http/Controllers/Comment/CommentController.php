@@ -2,47 +2,51 @@
 
 namespace App\Http\Controllers\Comment;
 
+use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Comment;
-use App\Models\Post;
+
 
 class CommentController extends ApiController
 {
    
-
+    private $commentRepositoryInterface;
     
-    public function update(Request $request,Comment $comment)
+    public function __construct(CommentRepositoryInterface $commentRepositoryInterface)
     {
-       $user_id=auth()->user()->id;
+        $this->commentRepositoryInterface=$commentRepositoryInterface;
+    }
+    
+    public function update(Request $request,$commentId)
+    {
+       
 
-       if($comment->user_id!=$user_id)
-       {  
-          return $this->errorResponse("You don't have permission to update this Comment",409);
-       }
+       if(!$this->commentRepositoryInterface->isCommentOwner(auth()->user()->id,$commentId))
+        {
+            return $this->errorResponse("You don't have permission to update this comment",409);   
+        }
 
        if($request->has('body'))
-       {
-         $comment->update($request->only(['body']));
-       }
-       
-       return $this->showModelAsResponse($comment);
+        {
+            $data=$request->only(['body']);
+            $comment=$this->commentRepositoryInterface->updateExistingComment($commentId,$data);
+            return $this->showModelAsResponse($comment);
+        }
+        return $this->errorResponse("No data Given",422);
           
     }
 
-    public function destroy(Comment $comment)
+    public function destroy($commentId)
     {
-       $user_id=auth()->user()->id; 
 
-       if($comment->user_id!=$user_id)
-       {  
-          return $this->errorResponse("You don't have permission to update this post",409);
-       }
+        if(!$this->commentRepositoryInterface->isCommentOwner(auth()->user()->id,$commentId))
+         {
+            return $this->errorResponse("You don't have permission to update this comment",409);   
+         }
 
-       $comment->delete();
-       
-       return $this->showModelAsResponse($comment);
+        $comment=$this->commentRepositoryInterface->deleteExistingComment($commentId);
+        return $this->successResponse(['message'=>'Removed Comment'],200);
   
        
     }

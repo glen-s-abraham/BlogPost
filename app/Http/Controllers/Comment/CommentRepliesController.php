@@ -2,32 +2,36 @@
 
 namespace App\Http\Controllers\Comment;
 
+use App\Repositories\Interfaces\CommentRepositoryInterface;
 use App\Http\Controllers\ApiController;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class CommentRepliesController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Comment $comment)
+    private $commentRepositoryInterface;
+    
+    public function __construct(CommentRepositoryInterface $commentRepositoryInterface)
     {
-        $comments=$comment->replies;
-        return $this->showCollectionAsResponse($comments);
+        $this->commentRepositoryInterface=$commentRepositoryInterface;
+    }
+
+    public function index($commentId)
+    {
+        $replies=$this->commentRepositoryInterface->getCommentReplies($commentId);
+        return $this->showCollectionAsResponse($replies);
     }
 
 
-    public function store(Request $request,Comment $comment)
+    public function store(Request $request,$commentId)
     {
         if($request->has('body'))
         {
-            $user_id=auth()->user()->id;
-            $comment=$comment->replies()->create(['body'=>$request->body,'user_id'=>$user_id]);
-            return $this->showModelAsResponse($comment);
+            $data=$request->only(['body']);
+            $data['user_id']=auth()->user()->id;
+            $reply=$this->commentRepositoryInterface->createCommentreply($commentId,$data);
+            return $this->showModelAsResponse($reply);
         }
-        return $this->errorResponse("Comment not found",404);
+        return $this->errorResponse("No data Given",422);
     }
 }

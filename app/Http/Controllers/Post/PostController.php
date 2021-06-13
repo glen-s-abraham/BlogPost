@@ -81,6 +81,5 @@ class PostController extends ApiController
 
         $post=$this->postRepositoryInterface->deleteExistingPost($postId);
         return $this->successResponse(['message'=>'Removed Post'],200);
-        return $this->showModelAsResponse($post);
     }
 }

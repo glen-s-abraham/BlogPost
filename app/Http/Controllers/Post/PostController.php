@@ -3,102 +3,84 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\ApiController;
-use App\Models\Post;
-use App\Models\Tag;
+use App\Repositories\Interfaces\PostRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Requests\PostStoreRequest;
 use App\Http\Requests\PostUpdateRequest;
 
 class PostController extends ApiController
 {
+
+    private $postRepositoryInterface;
+    
+    public function __construct(PostRepositoryInterface $postRepositoryInterface)
+    {
+        $this->postRepositoryInterface=$postRepositoryInterface;
+    }
     
     public function index()
     {
-        $posts=Post::all()
-                   ->load('image')
-                   ->load('tags');
+        $posts=$this->postRepositoryInterface->getPosts();
         return $this->showCollectionAsResponse($posts);
     }
 
     
-    private function creatOrFetchTagIds($taglist)
-    {
-        $tags=[];
-        foreach(explode(',' , $taglist) as $tagname)
-        {    
-            $tag=Tag::firstOrCreate(['name'=>$tagname]);
-         
-            if($tag)
-            {
-                $tags[]=$tag->id;
-            }                           
-        }
-        return $tags;
-    }
-
   
     public function store(PostStoreRequest $request)
     {
-        $data=$request->only(['title','body']);
+
+        $data=$request->only(['title','body','tags']);
         $data['user_id']=auth()->user()->id;
-        $post=Post::create($data);
-        
-        if($request->has('tags'))
-        {
-            $tags=$this->creatOrFetchTagIds($request->tags);
-            $post->tags()->attach($tags);
-        }
 
         if($request->hasFile('image'))
         {
             $image=$request->file('image')->store('public/posts');
-            $post->image()->create(['url'=>$image]);
+            $data['image']=$image;
         }
 
-        return $this->showModelAsResponse($post,201);    
+        $post=$this->postRepositoryInterface->createNewPost($data);
+        return $this->successResponse($post,201); 
+           
     }
 
     
-    public function show(Post $post)
+    public function show($postId)
     {
-        return $this->showModelAsResponse($post);
+        $post=$this->postRepositoryInterface->getPostById($postId);
+        return $this->successResponse($post,201);
     }
 
   
-    public function update(PostUpdateRequest $request, Post $post)
+    public function update(PostUpdateRequest $request,$postId)
     {
         
-        if($post->user->id!=auth()->user()->id)
+        if(!$this->postRepositoryInterface->isPostOwner(auth()->user()->id,$postId))
         {
             return $this->errorResponse("You don't have permission to update this post",409);   
         }
 
-        $post->update($request->only(['title','body']));
-
-        if($request->has('tags'))
-        {
-            $tags=$this->creatOrFetchTagIds($request->tags);
-            $post->tags()->syncWithoutDetaching($tags);
-        }
+        $data=$request->only(['title','body','tags']);
 
         if($request->hasFile('image'))
         {
             $image=$request->file('image')->store('public/posts');
-            $post->image()->updateOrCreate(['url'=>$image]);
+            $data['image']=$image;
         }
 
-        return $this->showModelAsResponse($post);
+        $post=$this->postRepositoryInterface->updateExistingPost($postId,$data);
+        return $this->successResponse($post,201);
     }
 
    
-    public function destroy(Post $post)
+    public function destroy($postId)
     {
-        if($post->user->id!=auth()->user()->id)
+        if(!$this->postRepositoryInterface->isPostOwner(auth()->user()->id,$postId))
         {
-            return $this->errorResponse("You don't have permission to delete this post",409);   
+            return $this->errorResponse("You don't have permission to update this post",409);   
         }
 
-        $post->delete();
+        $post=$this->postRepositoryInterface->deleteExistingPost($postId);
+        return $this->successResponse(['message'=>'Removed Post'],200);
         return $this->showModelAsResponse($post);
     }
 }

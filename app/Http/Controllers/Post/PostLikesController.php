@@ -1,34 +1,32 @@
 <?php
 
 namespace App\Http\Controllers\Post;
-
+use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Models\Post;
+
 class PostLikesController extends ApiController
 {
-    public function index(Post $post)
+    private $postRepositoryInterface;
+    
+    public function __construct(PostRepositoryInterface $postRepositoryInterface)
     {
-        $likes=$post->likes->count();
+        $this->postRepositoryInterface=$postRepositoryInterface;
+    }
+
+    public function index($postId)
+    {
+        $likes=$this->postRepositoryInterface->getPostLikes($postId);
         return $this->successResponse(["likes"=>$likes],200);
     }
 
    
    
-    public function toggleLike(Post $post)
+    public function toggleLike($postId)
     {
+        $userId=auth()->user()->id;
+        $likeStatus=$this->postRepositoryInterface->likeOrUnlikePost($userId,$postId);
+        return $this->successResponse([$likeStatus],200);
        
-    
-       $user_id=auth()->user()->id;
-
-       $liked=$post->likes()->where('user_id',$user_id)->get()->count();;
-        
-       if($liked==0)
-       {
-           $post->likes()->create(['user_id'=>$user_id]);
-           return $this->successResponse(["message"=>"Post Liked"],200);
-       }
-       $post->likes()->where('user_id',$user_id)->delete();
-       return $this->successResponse(["message"=>"Post Unliked"],200);
     }
 }

@@ -2,29 +2,39 @@
 
 namespace App\Http\Controllers\Post;
 
+
+use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Http\Controllers\ApiController;
-use App\Models\Post;
 use Illuminate\Http\Request;
 
 class PostCommentsController extends ApiController
 {
-   
-    public function index(Post $post)
+
+    private $postRepositoryInterface;
+    
+    public function __construct(PostRepositoryInterface $postRepositoryInterface)
     {
-        $comments=$post->comments;
+        $this->postRepositoryInterface=$postRepositoryInterface;
+    }
+   
+    public function index($postId)
+    {
+        $comments=$this->postRepositoryInterface->getPostComments($postId);
         return $this->showCollectionAsResponse($comments);
     }
 
 
-    public function store(Request $request,Post $post)
+    public function store(Request $request,$postId)
     {
         if($request->has('body'))
         {
-            $user_id=auth()->user()->id;
-            $comment=$post->comments()->create(['body'=>$request->body,'user_id'=>$user_id]);
+            $data=$request->only(['body']);
+            $data['user_id']=auth()->user()->id;
+            $comment=$this->postRepositoryInterface->createPostComment($postId,$data);
             return $this->showModelAsResponse($comment);
         }
-        return $this->errorResponse("Post not found",404);
+        return $this->errorResponse("No data Given",422);
+        
     }
 
    

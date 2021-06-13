@@ -2,19 +2,26 @@
 
 namespace App\Http\Controllers\Post;
 
+use App\Repositories\Interfaces\PostRepositoryInterface;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Models\Post;
+
 
 class PostsCommentsAndLikesController extends ApiController
 {
+    private $postRepositoryInterface;
+    
+    public function __construct(PostRepositoryInterface $postRepositoryInterface)
+    {
+        $this->postRepositoryInterface=$postRepositoryInterface;
+    }
+
     public function index()
     {
-        $posts=Post::all()
-                   ->load('user')
-                   ->load('tags')
-                   ->load('comments')
-                   ->load('likes');
+
+        
+
+        $posts=$this->postRepositoryInterface->getCompletePostDetails();
 
         return $this->showCollectionAsResponse($posts);
 

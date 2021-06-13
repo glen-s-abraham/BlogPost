@@ -23,10 +23,11 @@ Route::get('user/{user}/posts','User\UserPostsController@index');
 
 //Post related endpoints
 Route::get('post','Post\PostController@index');
-Route::get('post/{post}','Post\PostController@show');
-Route::get('post/{post}/comments','Post\PostCommentsController@index');
-Route::get('post/{post}/likes','Post\PostLikesController@index');
 Route::get('post/all','Post\PostsCommentsAndLikesController@index');
+Route::get('post/{postId}','Post\PostController@show');
+Route::get('post/{postId}/comments','Post\PostCommentsController@index');
+Route::get('post/{postId}/likes','Post\PostLikesController@index');
+
 
 //Comment related
 Route::get('comment/{comment}/replies','Comment\CommentRepliesController@index');
@@ -44,10 +45,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Post Related Endpoints
     Route::post('post/create','Post\PostController@store');
-    Route::put('post/{post}/update','Post\PostController@update');
-    Route::delete('post/{post}/delete','Post\PostController@destroy');
-    Route::post('post/{post}/comment','Post\PostCommentsController@store');
-    Route::put('post/{post}/like','Post\PostLikesController@toggleLike');
+    Route::put('post/{postId}/update','Post\PostController@update');
+    Route::delete('post/{postId}/delete','Post\PostController@destroy');
+    Route::post('post/{postId}/comment','Post\PostCommentsController@store');
+    Route::put('post/{postId}/like','Post\PostLikesController@toggleLike');
 
     //Comment Related Endpoints
     Route::post('comment/{comment}/reply','Comment\CommentRepliesController@store');

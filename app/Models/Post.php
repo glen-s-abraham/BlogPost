@@ -38,5 +38,20 @@ class Post extends Model
         return $this->belongsToMany(Tag::class);
     }
 
+    public function formatPost()
+    {
 
+        return [
+            'post_id'=>$this->id,
+            'title'=>$this->title,
+            'body'=>$this->body,
+            'author'=>$this->user->name,
+            'tags'=>$this->tags,
+            'image'=>$this->image,
+            'created_at'=>$this->created_at->diffForHumans(),
+            'updated_at'=>$this->updated_at->diffForHumans(),
+            'likes'=>$this->likes->count()
+
+        ];
+    }
 }

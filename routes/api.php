@@ -23,10 +23,11 @@ Route::get('user/{user}/posts','User\UserPostsController@index');
 
 //Post related endpoints
 Route::get('post','Post\PostController@index');
+Route::get('post/all','Post\PostsCommentsAndLikesController@index');
 Route::get('post/{post}','Post\PostController@show');
 Route::get('post/{post}/comments','Post\PostCommentsController@index');
 Route::get('post/{post}/likes','Post\PostLikesController@index');
-Route::get('post/all','Post\PostsCommentsAndLikesController@index');
+
 
 //Comment related
 Route::get('comment/{comment}/replies','Comment\CommentRepliesController@index');

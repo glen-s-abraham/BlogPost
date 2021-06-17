@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\CommentTransformer;
 use App\Models\Comment;
 use App\Models\Like;
 use App\Models\User;
@@ -11,6 +12,8 @@ use App\Models\User;
 class Comment extends Model
 {
     use HasFactory;
+
+    public $transformer=CommentTransformer::class;
 
     protected $guarded=[];
 

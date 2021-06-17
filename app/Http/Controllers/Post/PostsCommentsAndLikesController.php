@@ -16,7 +16,7 @@ class PostsCommentsAndLikesController extends ApiController
                    ->load('comments')
                    ->load('likes');
 
-        return $this->showCollectionAsResponse($posts);
+        return response($posts,200);
 
     }
 }

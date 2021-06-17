@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Transformers\PostTransformer;
 use App\Models\User;
 use App\Models\Image;
 use App\Models\Comment;
@@ -13,6 +14,8 @@ use App\Models\Tag;
 class Post extends Model
 {
     use HasFactory;
+
+    public $transformer=PostTransformer::class;
 
     protected $guarded=[];
 

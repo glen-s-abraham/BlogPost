@@ -35,4 +35,8 @@ class LikeTransformer extends TransformerAbstract
            'liked'=>$like->likable,
         ];
     }
+    public static function getOriginalField($index)
+    {
+        return null;
+    }
 }

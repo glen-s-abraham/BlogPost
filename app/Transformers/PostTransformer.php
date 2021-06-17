@@ -43,4 +43,19 @@ class PostTransformer extends TransformerAbstract
            'lastUpdated'=>$post->updated_at->diffForHumans(),
         ];
     }
+
+    public static function getOriginalField($index)
+    {
+        $fields=[
+           'identifier'=>'id',
+           'title'=>'title',
+           'content'=>'body',
+           'createdBy'=>'user_id',
+           'likes'=>'likes',
+           'creationDate'=>'created_at',
+           'lastUpdated'=>'updated_at',
+        ];
+        return isset($fields[$index])?$fields[$index]:null;
+    }
+
 }

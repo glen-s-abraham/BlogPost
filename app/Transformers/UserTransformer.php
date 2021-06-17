@@ -41,4 +41,11 @@ class UserTransformer extends TransformerAbstract
            'deleteDate'=>isset($user->deleted_at)?(string)$user->deleted_at:null,
         ];
     }
+    
+    public static function getOriginalField($index)
+    {
+        return null;
+    }
+
+    
 }

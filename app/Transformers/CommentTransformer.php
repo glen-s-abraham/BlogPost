@@ -40,4 +40,17 @@ class CommentTransformer extends TransformerAbstract
            'lastUpdated'=>$comment->updated_at->diffForHumans(),
         ];
     }
+
+    public static function getOriginalField($index)
+    {
+        $fields=[
+           'identifier'=>'id',
+           'comment'=>'body',
+           'likes'=>'likes',
+           'commentBy'=>'user_id',
+           'creationDate'=>'created_at',
+           'lastUpdated'=>'updated_at',
+        ];
+       return isset($fields[$index])?$fields[$index]:null;
+    }
 }

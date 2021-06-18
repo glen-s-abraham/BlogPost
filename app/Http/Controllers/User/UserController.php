@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Controllers\ApiController;
+use App\Transformers\UserTransformer;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -13,6 +14,11 @@ use App\Models\User;
 
 class UserController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware('transform.input:'.UserTransformer::class)->only(['store','update','login']);
+    }
     //Registration
     public function store(UserStoreRequest $request)
     {

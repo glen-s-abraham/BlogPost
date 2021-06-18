@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Post;
 
 use App\Http\Controllers\ApiController;
+use App\Transformers\PostTransformer;
 use App\Models\Post;
 use App\Models\Tag;
 use Illuminate\Http\Request;
@@ -11,6 +12,11 @@ use App\Http\Requests\PostUpdateRequest;
 
 class PostController extends ApiController
 {
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware('transform.input:'.PostTransformer::class)->only(['store','update']);
+    }
     
     public function index()
     {

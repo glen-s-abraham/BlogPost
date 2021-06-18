@@ -33,8 +33,9 @@ class UserTransformer extends TransformerAbstract
     {
         return [
            'identifier'=>(int)$user->id,
-           'name'=>(string)$user->name,
-           'email'=>(string)$user->email,
+           'username'=>(string)$user->name,
+           'mailId'=>(string)$user->email,
+           'image'=>url($user->image->url),
            'isVerified'=>isset($user->email_verified_at)?(string)$user->email_verified_at->diffForHumans():null,
            'creationDate'=>$user->created_at->diffForHumans(),
            'lastUpdated'=>$user->updated_at->diffForHumans(),
@@ -44,7 +45,36 @@ class UserTransformer extends TransformerAbstract
     
     public static function getOriginalField($index)
     {
-        return null;
+        $fields=[
+           'identifier'=>'id',
+           'username'=>'name',
+           'mailId'=>'email',
+           'password'=>'password',
+           'password_confirmation'=>'password_confirmation',
+           'image'=>'image',
+           'isVerified'=>'email_verified_at',
+           'creationDate'=>'created_at',
+           'lastUpdated'=>'updated_at',
+           'deleteDate'=>'deleted_at',
+        ];
+        return isset($fields[$index])?$fields[$index]:null;
+    }
+
+    public static function getTransformedField($index)
+    {
+        $fields=[
+           'id'=>'identifier',
+           'name'=>'username',
+           'email'=>'mailId',
+           'password'=>'password',
+           'password_confirmation'=>'password_confirmation',
+           'image'=>'image',
+           'email_verified_at'=>'isVerified',
+           'deleted_at'=>'deleteDate',
+           'created_at'=>'creationDate',
+           'updated_at'=>'lastUpdated',
+        ];
+        return isset($fields[$index])?$fields[$index]:null;
     }
 
     

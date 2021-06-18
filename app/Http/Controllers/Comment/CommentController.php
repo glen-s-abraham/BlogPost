@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Comment;
 
 use App\Http\Controllers\ApiController;
+use App\Transformers\CommentTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Comment;
@@ -11,7 +12,11 @@ use App\Models\Post;
 class CommentController extends ApiController
 {
    
-
+   public function __construct()
+    {
+        parent::__construct();
+        $this->middleware('transform.input:'.CommentTransformer::class)->only(['store','update']);
+    }
     
     public function update(Request $request,Comment $comment)
     {

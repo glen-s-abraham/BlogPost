@@ -52,8 +52,26 @@ class PostTransformer extends TransformerAbstract
            'content'=>'body',
            'createdBy'=>'user_id',
            'likes'=>'likes',
+           'image'=>'image',
+           'tags'=>'tags',
            'creationDate'=>'created_at',
            'lastUpdated'=>'updated_at',
+        ];
+        return isset($fields[$index])?$fields[$index]:null;
+    }
+
+    public static function getTransformedField($index)
+    {
+        $fields=[
+           'id'=>'identifier',
+           'title'=>'title',
+           'body'=>'content',
+           'user_id'=>'createdBy',
+           'likes'=>'likes',
+           'image'=>'image',
+           'tags'=>'tags',
+           'created_at'=>'creationDate',
+           'updated_at'=>'lastUpdated',
         ];
         return isset($fields[$index])?$fields[$index]:null;
     }

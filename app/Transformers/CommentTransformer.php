@@ -53,4 +53,17 @@ class CommentTransformer extends TransformerAbstract
         ];
        return isset($fields[$index])?$fields[$index]:null;
     }
+
+    public static function getTransformedField($index)
+    {
+        $fields=[
+           'id'=>'identifier',
+           'body'=>'comment',
+           'likes'=>'likes',
+           'user_id'=>'commentBy',
+           'created_at'=>'creationDate',
+           'updated_at'=>'lastUpdated',
+        ];
+        return isset($fields[$index])?$fields[$index]:null;
+    }
 }

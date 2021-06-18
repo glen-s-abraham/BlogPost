@@ -53,8 +53,13 @@ class UserController extends ApiController
         ],200);
     }
 
-    //Profile
-    public function show()
+    //show users
+    public function show(User $user)
+    {
+        return $this->showModelAsResponse($user);
+    }
+
+    public function profile()
     {
         $user=auth()->user();
         return $this->showModelAsResponse($user);

@@ -9,8 +9,8 @@ class PostLikesController extends ApiController
 {
     public function index(Post $post)
     {
-        $likes=$post->likes->count();
-        return $this->successResponse(["likes"=>$likes],200);
+        $likes=$post->likes->pluck('user_id');
+        return $this->successResponse(["liked by User_id's"=>$likes],200);
     }
 
    

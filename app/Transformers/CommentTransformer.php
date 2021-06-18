@@ -38,6 +38,22 @@ class CommentTransformer extends TransformerAbstract
            'likes'=>isset($comment->likes)?(int)$comment->likes->count():0,
            'creationDate'=>$comment->created_at->diffForHumans(),
            'lastUpdated'=>$comment->updated_at->diffForHumans(),
+           'links'=>[
+                [
+                    'rel'=>'comment.replies',
+                    'href'=>route('comment.replies.index',$comment->id),
+                ],
+                [
+                    'rel'=>'comment.likes',
+                    'href'=>route('comment.likes.index',$comment->id),
+                ],
+                [
+                    'rel'=>'creator',
+                    'href'=>route('user.show',$comment->user_id),
+                ],
+
+ 
+            ]
         ];
     }
 

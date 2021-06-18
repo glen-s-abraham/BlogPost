@@ -35,11 +35,26 @@ class UserTransformer extends TransformerAbstract
            'identifier'=>(int)$user->id,
            'username'=>(string)$user->name,
            'mailId'=>(string)$user->email,
-           'image'=>url($user->image->url),
+           'image'=>isset($post->image)?url($post->image->url):null,
            'isVerified'=>isset($user->email_verified_at)?(string)$user->email_verified_at->diffForHumans():null,
            'creationDate'=>$user->created_at->diffForHumans(),
            'lastUpdated'=>$user->updated_at->diffForHumans(),
            'deleteDate'=>isset($user->deleted_at)?(string)$user->deleted_at:null,
+           'links'=>[
+                [
+                    'rel'=>'user.posts',
+                    'href'=>route('user.posts.index',$user->id),
+                ],
+                [
+                    'rel'=>'user.comments',
+                    'href'=>route('user.comments.index',$user->id),
+                ],
+                [
+                    'rel'=>'user.likes',
+                    'href'=>route('user.likes.index',$user->id),
+                ],
+ 
+            ]
         ];
     }
     

@@ -10,7 +10,7 @@ class CommentLikesController extends ApiController
 {
     public function index(Comment $comment)
     {
-        $likes=$comment->likes()->count();
+        $likes=$comment->likes;
         return $this->successResponse(["likes"=>$likes],200);
     }
 

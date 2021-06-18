@@ -13,9 +13,9 @@ class UserCommentsController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(User $user)
     {
-        $user=auth()->user();
+        
         $comments=$user->comments()->with('commentable')->get();
         return $this->showCollectionAsResponse($comments);
     }

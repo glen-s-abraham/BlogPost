@@ -41,6 +41,26 @@ class PostTransformer extends TransformerAbstract
            'createdBy'=>(int)$post->user_id,
            'creationDate'=>$post->created_at->diffForHumans(),
            'lastUpdated'=>$post->updated_at->diffForHumans(),
+           'links'=>[
+                [
+                    'rel'=>'self',
+                    'href'=>route('post.show',$post->id),
+                ],
+                [
+                    'rel'=>'post.comments',
+                    'href'=>route('post.comments.index',$post->id),
+                ],
+                [
+                    'rel'=>'post.likes',
+                    'href'=>route('post.likes.index',$post->id),
+                ],
+                [
+                    'rel'=>'creator',
+                    'href'=>route('user.show',$post->user_id),
+                ],
+
+ 
+            ]
         ];
     }
 

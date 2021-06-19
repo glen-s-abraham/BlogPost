@@ -74,9 +74,9 @@ class PostController extends ApiController
     public function update(PostUpdateRequest $request, Post $post)
     {
         
-        if($post->user->id!=auth()->user()->id)
+        if(auth()->user()->cannot('update',$post))
         {
-            return $this->errorResponse("You don't have permission to update this post",409);   
+            return $this->errorResponse("You don't have permission to update this post",403);   
         }
 
         $post->update($request->only(['title','body']));
@@ -99,9 +99,9 @@ class PostController extends ApiController
    
     public function destroy(Post $post)
     {
-        if($post->user->id!=auth()->user()->id)
+        if(auth()->user()->cannot('delete',$post))
         {
-            return $this->errorResponse("You don't have permission to delete this post",409);   
+            return $this->errorResponse("You don't have permission to delete this post",403);   
         }
 
         $post->delete();

@@ -20,9 +20,9 @@ class CommentController extends ApiController
     
     public function update(Request $request,Comment $comment)
     {
-       $user_id=auth()->user()->id;
+       
 
-       if($comment->user_id!=$user_id)
+       if(auth()->user()->cannot('update',$comment))
        {  
           return $this->errorResponse("You don't have permission to update this post",409);
        }
@@ -38,9 +38,9 @@ class CommentController extends ApiController
 
     public function destroy(Comment $comment)
     {
-       $user_id=auth()->user()->id; 
+       
 
-       if($comment->user_id!=$user_id)
+       if(auth()->user()->cannot('delete',$post))
        {  
           return $this->errorResponse("You don't have permission to update this post",409);
        }
